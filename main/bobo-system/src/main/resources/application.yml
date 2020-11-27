@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/main?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+    username: ${DB_USER:root}
+    password: ${DB_PWD:123456}
+  mvc:
+    static-path-pattern: /**  #资源默认映射路径
+  resources:
+    static-locations: classpath:/static/  #自定义静态资源存放位置
+  main:
+    allow-bean-definition-overriding: true
+server:
+  port: 8089
+#mybatis-plus:
+#  type-aliases-package: com.ku.bobo.modules.poll.mapper
+
+#自定义参数
+bobo:
+  db:
+    driver-class-name: ${spring.datasource.driver-class-name}
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+  auth:
+    ignores:
+      # 需要忽略的 post 请求
+      post:
+        - "/auth/login"
+        - "/auth/me"
+        - "/auth/logout"
+        - "/poll/list"
+      # 需要忽略的请求，不限方法
+      pattern:
+        - "/test/*"
+        - "/permission/*"

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ku.bobo.generator.mysql.dao.IllnessDao">
+  <resultMap id="BaseResultMap" type="com.ku.bobo.generator.mysql.entity.Illness">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="people_count" jdbcType="INTEGER" property="peopleCount" />
+    <result column="treatment_rate" jdbcType="DOUBLE" property="treatmentRate" />
+    <result column="recur_rate" jdbcType="DOUBLE" property="recurRate" />
+    <result column="die_rate" jdbcType="DOUBLE" property="dieRate" />
+    <result column="cause" jdbcType="VARCHAR" property="cause" />
+    <result column="symptom" jdbcType="VARCHAR" property="symptom" />
+    <result column="tall_crowd" jdbcType="VARCHAR" property="tallCrowd" />
+    <result column="low_crowd" jdbcType="VARCHAR" property="lowCrowd" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`, `level`, people_count, treatment_rate, recur_rate, die_rate, cause, symptom, 
+    tall_crowd, low_crowd
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from illness
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from illness
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ku.bobo.generator.mysql.entity.Illness" useGeneratedKeys="true">
+    insert into illness (`name`, `level`, people_count, 
+      treatment_rate, recur_rate, die_rate, 
+      cause, symptom, tall_crowd, 
+      low_crowd)
+    values (#{name,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, #{peopleCount,jdbcType=INTEGER}, 
+      #{treatmentRate,jdbcType=DOUBLE}, #{recurRate,jdbcType=DOUBLE}, #{dieRate,jdbcType=DOUBLE}, 
+      #{cause,jdbcType=VARCHAR}, #{symptom,jdbcType=VARCHAR}, #{tallCrowd,jdbcType=VARCHAR}, 
+      #{lowCrowd,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ku.bobo.generator.mysql.entity.Illness" useGeneratedKeys="true">
+    insert into illness
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="level != null">
+        `level`,
+      </if>
+      <if test="peopleCount != null">
+        people_count,
+      </if>
+      <if test="treatmentRate != null">
+        treatment_rate,
+      </if>
+      <if test="recurRate != null">
+        recur_rate,
+      </if>
+      <if test="dieRate != null">
+        die_rate,
+      </if>
+      <if test="cause != null">
+        cause,
+      </if>
+      <if test="symptom != null">
+        symptom,
+      </if>
+      <if test="tallCrowd != null">
+        tall_crowd,
+      </if>
+      <if test="lowCrowd != null">
+        low_crowd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="peopleCount != null">
+        #{peopleCount,jdbcType=INTEGER},
+      </if>
+      <if test="treatmentRate != null">
+        #{treatmentRate,jdbcType=DOUBLE},
+      </if>
+      <if test="recurRate != null">
+        #{recurRate,jdbcType=DOUBLE},
+      </if>
+      <if test="dieRate != null">
+        #{dieRate,jdbcType=DOUBLE},
+      </if>
+      <if test="cause != null">
+        #{cause,jdbcType=VARCHAR},
+      </if>
+      <if test="symptom != null">
+        #{symptom,jdbcType=VARCHAR},
+      </if>
+      <if test="tallCrowd != null">
+        #{tallCrowd,jdbcType=VARCHAR},
+      </if>
+      <if test="lowCrowd != null">
+        #{lowCrowd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ku.bobo.generator.mysql.entity.Illness">
+    update illness
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        `level` = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="peopleCount != null">
+        people_count = #{peopleCount,jdbcType=INTEGER},
+      </if>
+      <if test="treatmentRate != null">
+        treatment_rate = #{treatmentRate,jdbcType=DOUBLE},
+      </if>
+      <if test="recurRate != null">
+        recur_rate = #{recurRate,jdbcType=DOUBLE},
+      </if>
+      <if test="dieRate != null">
+        die_rate = #{dieRate,jdbcType=DOUBLE},
+      </if>
+      <if test="cause != null">
+        cause = #{cause,jdbcType=VARCHAR},
+      </if>
+      <if test="symptom != null">
+        symptom = #{symptom,jdbcType=VARCHAR},
+      </if>
+      <if test="tallCrowd != null">
+        tall_crowd = #{tallCrowd,jdbcType=VARCHAR},
+      </if>
+      <if test="lowCrowd != null">
+        low_crowd = #{lowCrowd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ku.bobo.generator.mysql.entity.Illness">
+    update illness
+    set `name` = #{name,jdbcType=VARCHAR},
+      `level` = #{level,jdbcType=VARCHAR},
+      people_count = #{peopleCount,jdbcType=INTEGER},
+      treatment_rate = #{treatmentRate,jdbcType=DOUBLE},
+      recur_rate = #{recurRate,jdbcType=DOUBLE},
+      die_rate = #{dieRate,jdbcType=DOUBLE},
+      cause = #{cause,jdbcType=VARCHAR},
+      symptom = #{symptom,jdbcType=VARCHAR},
+      tall_crowd = #{tallCrowd,jdbcType=VARCHAR},
+      low_crowd = #{lowCrowd,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
