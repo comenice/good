@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-11-22
  */
 @Api(tags = "PollController", description = "")
-@RestController
 @ResponseResult
 @RequestMapping("poll")
 public class PollController {
@@ -54,14 +53,13 @@ public class PollController {
 
     /**
     * 分页查询
-    * @param poll 用户参数
     * @param pageNum 分页-> 第几页
     * @param pageSize 分页-> 一页多少数量
     * @return
     */
     @ApiOperation( "条件分页查询" )
-    @PostMapping("/list")
-    public IPage<PollVO> list( @RequestBody Poll poll,
+    @GetMapping("/list")
+    public IPage<PollVO> list(
     @RequestParam(name = "pageNum", defaultValue = "1")  Integer pageNum ,
     @RequestParam(name = "pageSize", defaultValue = "10")  Integer pageSize ){
         Page<Poll> page = new Page<>( pageNum , pageSize );

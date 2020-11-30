@@ -87,45 +87,56 @@ public class PollServiceImpl extends ServiceImpl<PollMapper, Poll> implements IP
     }
 
     @Override
-    public IPage<PollVO> listPollVO(Page page) {
+    public PollVO getPollVOById(Long pollId) {
+        PollVO pollVO = pollVOMapper.selectVO(pollId);
+        SysUser currentUser = MiddleUtils.getCurrentSysUser(true, true);
 
+        readyPollVO(currentUser, pollVO);
+        return pollVO ;
+    }
+
+    @Override
+    public IPage<PollVO> listPollVO(Page page) {
         IPage<PollVO> polls = pollVOMapper.selectPageVO(page);
         if ( polls.getCurrent() < 0 ){
             return null;
         }
 
         SysUser currentUser = MiddleUtils.getCurrentSysUser(true, true);
-
         polls.getRecords().forEach( ( poll ) -> {
-            //查询投票的选项,选项中包含投票总数
-            List<PollChoiceVO> pollChoices = pollChoiceMapper.selectListVO( poll.getId() );
-            if ( pollChoices.isEmpty() ){
-                //选项丢失
-                log.warn( "投票选项丢失，投票ID = {}" , poll.getId() );
-                return;
-            }
-
-            if ( poll.getCreatedBySysUser() == null || poll.getCreatedBySysUser().getId() == null ){
-                log.warn( "投票创建者未找到，创建者ID = {}" , poll.getCreatedBySysUser().getId() );
-            }
-
-            poll.setSelectedChoice(null);
-            //当前登陆用户是否有选中的选项
-            if ( currentUser != null ){
-                for (PollChoiceVO pollChoiceVO : pollChoices) {
-                    if ( pollChoiceVO.getUserId() != null && pollChoiceVO.getUserId().equals( currentUser.getId() ) )
-                        poll.setSelectedChoice(pollChoiceVO.getId());
-                        break;
-                }
-            }
-
-            poll.setChoices( pollChoices );
-            poll.setIsExpired( poll.getExpirationDateTime().isBefore( Instant.now()) );
-            poll.setTotalVotes( pollChoices.stream().mapToLong( PollChoice::getVoteCount ).sum() );
-            poll.setCreationDateTime( poll.getCreatedAt().toInstant(ZoneOffset.UTC) );
+            readyPollVO(currentUser, poll);
         });
-        System.out.println("polls = " + polls);
         return polls;
+    }
+
+
+    private void readyPollVO(SysUser currentUser, PollVO poll) {
+        //查询投票的选项,选项中包含投票总数
+        List<PollChoiceVO> pollChoices = pollChoiceMapper.selectListVO( poll.getId() );
+        if ( pollChoices.isEmpty() ){
+            //选项丢失
+            log.warn( "投票选项丢失，投票ID = {}" , poll.getId() );
+            return;
+        }
+
+        if ( poll.getCreatedBySysUser() == null || poll.getCreatedBySysUser().getId() == null ){
+            log.warn( "投票创建者未找到，投票ID = {}" , poll.getId() );
+        }
+
+        poll.setSelectedChoice(null);
+        //当前登陆用户是否有选中的选项
+        if ( currentUser != null ){
+            for (PollChoiceVO pollChoiceVO : pollChoices) {
+                if ( pollChoiceVO.getUserId() != null && pollChoiceVO.getUserId().equals( currentUser.getId() ) )
+                    poll.setSelectedChoice(pollChoiceVO.getId());
+                    break;
+            }
+        }
+
+        poll.setChoices( pollChoices );
+        poll.setIsExpired( poll.getExpirationDateTime().isBefore( Instant.now()) );
+        poll.setTotalVotes( pollChoices.stream().mapToLong( PollChoice::getVoteCount ).sum() );
+        poll.setCreationDateTime( poll.getCreatedAt().toInstant(ZoneOffset.UTC) );
     }
 
 

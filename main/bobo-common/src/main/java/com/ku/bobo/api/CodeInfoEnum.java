@@ -13,7 +13,9 @@ public enum CodeInfoEnum implements ICodeInfo {
 
 
     /**
-     * 请先登录！
+     * 请先登录 。
+     *
+     * 可能登陆了，资源要认证，但并未认证。
      */
     UNAUTHORIZED(401, "请先登录！"),
 

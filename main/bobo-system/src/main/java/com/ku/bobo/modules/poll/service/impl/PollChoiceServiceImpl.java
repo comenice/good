@@ -1,5 +1,6 @@
 package com.ku.bobo.modules.poll.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ku.bobo.modules.poll.entity.PollChoice;
 import com.ku.bobo.modules.poll.mapper.PollChoiceMapper;
 import com.ku.bobo.modules.poll.service.IPollChoiceService;
@@ -16,5 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PollChoiceServiceImpl extends ServiceImpl<PollChoiceMapper, PollChoice> implements IPollChoiceService {
+
+
 
 }

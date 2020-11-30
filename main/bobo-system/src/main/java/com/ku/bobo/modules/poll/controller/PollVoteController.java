@@ -2,6 +2,11 @@ package com.ku.bobo.modules.poll.controller;
 
 import java.util.List;
 import java.util.Arrays;
+
+import com.ku.bobo.api.ResponseResult;
+import com.ku.bobo.modules.poll.payload.vo.PollVO;
+import com.ku.bobo.modules.security.CurrentUser;
+import com.ku.bobo.modules.security.service.dto.AuthUserDto;
 import io.swagger.annotations.Api;
 import com.ku.bobo.api.CommonResult;
 import io.swagger.annotations.ApiOperation;
@@ -25,18 +30,22 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-11-22
  */
 @Api(tags = "PollVoteController", description = "用户投票选决")
-@RestController
+@ResponseResult
 @RequestMapping("vote")
 public class PollVoteController {
 
     @Autowired
     private IPollVoteService iPollVoteService;
 
-    @ApiOperation( "创建" )
+
+    @ApiOperation( "投票" )
     @PostMapping("")
-    public CommonResult<PollVote> createPollVote( @RequestBody PollVote pollVote ){
-        boolean b = iPollVoteService.save( pollVote );
-        return CommonResult.Booleans.save( b );
+    public PollVO createVoteAndGetUpdatedPoll(
+            @CurrentUser AuthUserDto authUser ,
+            @RequestBody PollVote pollVote ){
+        pollVote.setUserId( authUser.getId() );
+
+        return iPollVoteService.saveAndIncrChoiceCountAndGetUpdate( pollVote );
     }
 
     @ApiOperation( "批量创建" )

@@ -23,4 +23,6 @@ public interface IPollService extends IService<Poll> {
 
    IPage<PollVO> listPollVO(Page page);
 
+   PollVO getPollVOById(Long pollId);
+
 }

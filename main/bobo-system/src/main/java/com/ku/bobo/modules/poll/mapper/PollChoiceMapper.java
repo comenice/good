@@ -7,6 +7,7 @@ import com.ku.bobo.modules.poll.payload.vo.PollChoiceVO;
 import com.ku.bobo.modules.poll.payload.vo.PollVO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -25,5 +26,13 @@ public interface PollChoiceMapper extends BaseMapper<PollChoice> {
             "where pc.poll_id = #{pollId}")
     List<PollChoiceVO> selectListVO( @Param("pollId") Long pollId );
 
+
+    /**
+     * 投票数量加一
+     * @param id 投票选项ID
+     * @return
+     */
+    @Update( "update poll_choice set vote_count=vote_count+1 where id = #{id}" )
+    int incrChoiceCount( @Param("id") Long id );
 
 }

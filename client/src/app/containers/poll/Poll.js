@@ -17,15 +17,16 @@ class Poll extends Component {
     };
 
     isSelected = (choice) => {
-        
         return this.props.poll.selectedChoice === choice.id;
     }
 
     getWinningChoice = () => {
-        return this.props.poll.choices.reduce((prevChoice, currentChoice) => 
-            currentChoice.voteCount > prevChoice.voteCount ? currentChoice : prevChoice, 
-            {voteCount: -Infinity}
-        );
+        return this.props.poll.choices.reduce((prevChoice, currentChoice) =>  {
+            if ( !prevChoice || currentChoice.voteCount === prevChoice.voteCount ){
+                return
+            }
+            return currentChoice.voteCount  > prevChoice.voteCount ? currentChoice : prevChoice
+        });
     }
 
     getTimeRemaining = (poll) => {
@@ -56,9 +57,8 @@ class Poll extends Component {
     }
 
     render() {
-        console.log( "props" , this.props )
         const pollChoices = [];
-      
+        let handleVoteSubmit = this.props.handleVoteSubmit
         if( this.props.poll.selectedChoice || this.props.poll.isExpired) {
             const winningChoice = this.props.poll.isExpired ? this.getWinningChoice() : null;
 
@@ -110,9 +110,9 @@ class Poll extends Component {
                 </div>
                 <div className="poll-footer">
                     { 
-                        (!this.props.poll.selectedChoice || this.props.poll.isExpired) ?
-                        <Button className="vote-button" disabled={!this.props.currentVote}  onClick={AuthLoginWrap(this.props.handleVoteSubmit)} >Vote</Button>
-                        : null 
+                        (!this.props.poll.selectedChoice && !this.props.poll.isExpired) ?
+                        <Button className="vote-button"  disabled={!this.props.currentVote}  onClick={ ()=>{AuthLoginWrap(handleVoteSubmit)} }  >Vote</Button>
+                           : null 
                     }
                     <span className="total-votes">总票数: {this.props.poll.totalVotes}</span>
                     <span className="separator">•</span>
@@ -127,9 +127,11 @@ class Poll extends Component {
         );
     }
 }
+function al(){
+    alert(999)
+}
 
 function CompletedOrVotedPollChoice(props) {
-    console.log( "props" , props )
     return (
         <div className="cv-poll-choice">
             <span className="cv-poll-choice-details">

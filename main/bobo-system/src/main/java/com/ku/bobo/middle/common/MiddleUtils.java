@@ -1,6 +1,7 @@
 package com.ku.bobo.middle.common;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.druid.util.StringUtils;
 import com.ku.bobo.api.CodeInfoEnum;
 import com.ku.bobo.modules.security.config.AuthProperties;
 import com.ku.bobo.modules.security.config.JwtAuthenticationFilter;
@@ -32,17 +33,22 @@ public class MiddleUtils {
      */
     public static SysUser getCurrentSysUser(  boolean security , boolean unknownLogin ){
         Object principal = null;
-
         try {
-
             principal = SecurityUtils.getCurrentPrincipal();
         } catch (AuthException e) {
-            //未登录
-            if (  ObjectUtil.equal(e.getICodeInfo(), CodeInfoEnum.UNAUTHORIZED) ){
+
+            if ( ObjectUtil.equal( e.getICodeInfo() , CodeInfoEnum.UNAUTHORIZED ) ){
+                if ( unknownLogin ){
+                    JwtUtil jwtUtil = ApplicationUtils.getBean(JwtUtil.class);
+                    String token = jwtUtil.getJwtFromRequest(WebUtils.getRequest());
+                    if (StringUtils.isEmpty( token )){
+                        return null;
+                    }else {
+                        principal = jwtUtil.getAuthentication(WebUtils.getRequest()).getPrincipal();
+                    }
+                }
+            } else{
                 return null;
-            }else if ( unknownLogin ){
-                JwtUtil jwtUtil = ApplicationUtils.getBean(JwtUtil.class);
-                principal = jwtUtil.getAuthentication(WebUtils.getRequest()).getPrincipal();
             }
         }
 

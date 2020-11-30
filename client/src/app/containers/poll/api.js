@@ -1,5 +1,5 @@
 import  request from 'util/request'
-import  { page } from 'util/util'
+import  { getPage } from 'util/util'
 
 
 export function createPoll( p ) {
@@ -8,5 +8,11 @@ export function createPoll( p ) {
 
 
 export function getPoll( pageNum , pageSize ) {
-    return request.post( "/poll/list" , page( pageNum , pageSize ) )
+    let p = getPage( pageNum , pageSize );
+    return request.get( "/poll/list?" + p )
+}
+
+
+export function createVote( p ){
+    return request.post( "/vote" , p )
 }
